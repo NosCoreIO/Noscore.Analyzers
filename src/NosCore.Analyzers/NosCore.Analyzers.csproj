@@ -12,7 +12,7 @@
 		<RepositoryUrl>https://github.com/NosCoreIO/NosCore.Analyzers.git</RepositoryUrl>
 		<PackageIconUrl></PackageIconUrl>
 		<PackageTags>nostale, noscore, nostale private server source, nostale emulator</PackageTags>
-		<Version>0.0.3</Version>
+		<Version>0.0.4</Version>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<Description>NosCore Analyzers</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
