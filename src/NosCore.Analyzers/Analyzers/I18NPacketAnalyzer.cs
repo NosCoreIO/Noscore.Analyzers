@@ -20,7 +20,7 @@ namespace NosCore.Analyzers.Analyzers
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.Resources.AnalyzerMessageFormat), Resources.Resources.ResourceManager, typeof(Resources.Resources));
         private const string Category = "Naming";
 
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -39,7 +39,7 @@ namespace NosCore.Analyzers.Analyzers
             }
 
             var type = context.SemanticModel.GetTypeInfo(node).Type;
-            var properties = type.GetMembers().Where(m => m.Kind == SymbolKind.Property).OfType<IPropertySymbol>().ToList();
+            var properties = type?.GetMembers().Where(m => m.Kind == SymbolKind.Property).OfType<IPropertySymbol>().ToList();
 
             var enumProperty = properties?.FirstOrDefault(x => x.Type.Name == "Game18NConstString");
             if (enumProperty == null)
@@ -54,25 +54,25 @@ namespace NosCore.Analyzers.Analyzers
             }
 
 
-            var assignments = node.Initializer.Expressions.OfType<AssignmentExpressionSyntax>().ToList();
-            var enumAssignment = assignments.FirstOrDefault(x => (x?.Left as IdentifierNameSyntax)?.Identifier.Value.ToString() == enumProperty.Name);
-            var argumentAssignment = assignments.FirstOrDefault(x => (x?.Left as IdentifierNameSyntax)?.Identifier.Value.ToString() == argumentProperty.Name);
+            var assignments = node.Initializer?.Expressions.OfType<AssignmentExpressionSyntax>().ToList();
+            var enumAssignment = assignments?.FirstOrDefault(x => (x?.Left as IdentifierNameSyntax)?.Identifier.Value?.ToString() == enumProperty.Name);
+            var argumentAssignment = assignments?.FirstOrDefault(x => (x?.Left as IdentifierNameSyntax)?.Identifier.Value?.ToString() == argumentProperty.Name);
 
             var arguments = new List<string>();
             if (enumAssignment != null)
             {
                 var enumValue = (enumAssignment.Right as MemberAccessExpressionSyntax);
-                var enumType = context.SemanticModel.GetTypeInfo(enumValue).Type;
-                var fields = enumType.GetMembers().Where(m => m.Kind == SymbolKind.Field).OfType<IFieldSymbol>().ToList();
-                var field = fields.FirstOrDefault(x => x.Name == enumValue?.Name.ToString()) ?? fields.First();
-                var attribute = field.GetAttributes().FirstOrDefault(x => x.AttributeClass.Name == "Game18NArgumentsAttribute");
-                arguments.AddRange(attribute.ConstructorArguments.First().Values.Select(x => x.Value.ToString()));
+                var enumType = enumValue != null ? context.SemanticModel.GetTypeInfo(enumValue).Type : null;
+                var fields = enumType?.GetMembers().Where(m => m.Kind == SymbolKind.Field).OfType<IFieldSymbol>().ToList();
+                var field = fields?.FirstOrDefault(x => x.Name == enumValue?.Name.ToString()) ?? fields?.First() ?? throw new ArgumentException();
+                var attribute = field.GetAttributes().FirstOrDefault(x => x.AttributeClass?.Name == "Game18NArgumentsAttribute");
+                arguments.AddRange(attribute?.ConstructorArguments.First().Values.Where(x=>x.Value != null).Select(x => x.Value!.ToString()) ?? new List<string>());
             }
 
             var error = false;
             if (argumentAssignment != null)
             {
-                var expressions = (argumentAssignment.Right as ArrayCreationExpressionSyntax)?.Initializer.Expressions.ToList() ?? new List<ExpressionSyntax>();
+                var expressions = (argumentAssignment.Right as ArrayCreationExpressionSyntax)?.Initializer?.Expressions.ToList() ?? new List<ExpressionSyntax>();
 
                 if (arguments.Count != expressions.Count)
                 {
@@ -91,7 +91,7 @@ namespace NosCore.Analyzers.Analyzers
                         {
                             case "string":
                                 isValid = literal?.IsKind(SyntaxKind.StringLiteralExpression)
-                                          ?? variable.Name == nameof(String);
+                                          ?? variable?.Name == nameof(String);
                                 if (isValid != true)
                                 {
                                     error = true;
@@ -101,7 +101,7 @@ namespace NosCore.Analyzers.Analyzers
 
                             case "long":
                                 isValid = literal?.IsKind(SyntaxKind.NumericLiteralExpression)
-                                          ?? variable.Name is nameof(Int32) or nameof(Int16) or nameof(Int64);
+                                          ?? variable?.Name is nameof(Int32) or nameof(Int16) or nameof(Int64);
                                 if (isValid != true)
                                 {
                                     error = true;
