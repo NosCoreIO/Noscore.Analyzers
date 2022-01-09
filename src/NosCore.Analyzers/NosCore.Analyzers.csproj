@@ -20,8 +20,6 @@
 		<Company>NosCore</Company>
 		<PackageIcon>icon.png</PackageIcon>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<!-- Avoid ID conflicts with the package project. -->
-		<PackageId>*$(MSBuildProjectFile)*</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>
