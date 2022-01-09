@@ -19,12 +19,10 @@
 		<RepositoryType>git</RepositoryType>
 		<Company>NosCore</Company>
 		<PackageIcon>icon.png</PackageIcon>
-		<IncludeSymbols>true</IncludeSymbols>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<DevelopmentDependency>true</DevelopmentDependency>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
 	</PropertyGroup>
 
 	<ItemGroup>
