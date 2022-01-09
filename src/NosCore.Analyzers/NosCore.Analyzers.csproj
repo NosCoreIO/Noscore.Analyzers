@@ -1,49 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<IsPackable>false</IsPackable>
 		<LangVersion>latest</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>NosCore</Authors>
 		<Copyright>2021</Copyright>
 		<Nullable>enable</Nullable>
-		<PackageProjectUrl>https://github.com/NosCoreIO/NosCore.Networking</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/NosCoreIO/NosCore.Networking.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/NosCoreIO/NosCore.Analyzers</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/NosCoreIO/NosCore.Analyzers.git</RepositoryUrl>
 		<PackageIconUrl></PackageIconUrl>
 		<PackageTags>nostale, noscore, nostale private server source, nostale emulator</PackageTags>
-		<Version>2.1.0</Version>
+		<Version>0.0.1</Version>
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Description>NosCore Networking</Description>
+		<Description>NosCore Analyzers</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryType>git</RepositoryType>
 		<Company>NosCore</Company>
 		<PackageIcon>icon.png</PackageIcon>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<!-- Avoid ID conflicts with the package project. -->
+		<PackageId>*$(MSBuildProjectFile)*</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DotNetty.Buffers" Version="0.7.0" />
-		<PackageReference Include="DotNetty.Codecs" Version="0.7.0" />
-		<PackageReference Include="DotNetty.Common" Version="0.7.1" />
-		<PackageReference Include="DotNetty.Transport" Version="0.7.0" />
-		<PackageReference Include="NodaTime" Version="3.0.9" />
-		<PackageReference Include="NosCore.Packets" Version="7.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.2.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.2.0" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Resource\LocalizedResources.Designer.cs">
-			<DependentUpon>LocalizedResources.resx</DependentUpon>
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-		</Compile>
+		<None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Update="Resource\LocalizedResources.resx">
-			<LastGenOutput>LocalizedResources.Designer.cs</LastGenOutput>
-			<Generator>PublicResXFileCodeGenerator</Generator>
+		<Compile Update="Resources\Resources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="Resources.resx" />
+		<EmbeddedResource Update="Resources\Resources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="Resources.Designer.cs">
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Resources\CodeFixResources.Designer.cs" DesignTime="True" AutoGen="True" DependentUpon="CodeFixResources.resx" />
+		<EmbeddedResource Update="Resources\CodeFixResources.resx" Generator="ResXFileCodeGenerator" LastGenOutput="CodeFixResources.Designer.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -52,4 +52,5 @@
 			<PackagePath></PackagePath>
 		</None>
 	</ItemGroup>
+
 </Project>
