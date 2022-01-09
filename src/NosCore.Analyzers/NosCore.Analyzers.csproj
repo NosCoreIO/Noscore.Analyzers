@@ -21,7 +21,6 @@
 		<PackageIcon>icon.png</PackageIcon>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<DevelopmentDependency>true</DevelopmentDependency>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
 	</PropertyGroup>
 
